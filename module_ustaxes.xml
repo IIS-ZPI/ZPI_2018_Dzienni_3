@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_ustaxes" default="compile.module.ustaxes">
+  <dirname property="module.ustaxes.basedir" file="${ant.file.module_ustaxes}"/>
+  
+  <property name="module.jdk.home.ustaxes" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.ustaxes" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.ustaxes" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.ustaxes" value="-encoding UTF-8 -source 1.8 -target 1.8 ${compiler.args}"/>
+  
+  <property name="ustaxes.output.dir" value="${module.ustaxes.basedir}/out/production/USTaxes"/>
+  <property name="ustaxes.testoutput.dir" value="${module.ustaxes.basedir}/out/test/USTaxes"/>
+  
+  <path id="ustaxes.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="ustaxes.module.production.classpath">
+    <path refid="${module.jdk.classpath.ustaxes}"/>
+  </path>
+  
+  <path id="ustaxes.runtime.production.module.classpath">
+    <pathelement location="${ustaxes.output.dir}"/>
+  </path>
+  
+  <path id="ustaxes.module.classpath">
+    <path refid="${module.jdk.classpath.ustaxes}"/>
+    <pathelement location="${ustaxes.output.dir}"/>
+  </path>
+  
+  <path id="ustaxes.runtime.module.classpath">
+    <pathelement location="${ustaxes.testoutput.dir}"/>
+    <pathelement location="${ustaxes.output.dir}"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.ustaxes">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.ustaxes">
+    <patternset refid="excluded.from.module.ustaxes"/>
+  </patternset>
+  
+  <path id="ustaxes.module.sourcepath">
+    <dirset dir="${module.ustaxes.basedir}">
+      <include name="src"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.ustaxes" depends="compile.module.ustaxes.production,compile.module.ustaxes.tests" description="Compile module USTaxes"/>
+  
+  <target name="compile.module.ustaxes.production" depends="register.custom.compilers" description="Compile module USTaxes; production classes">
+    <mkdir dir="${ustaxes.output.dir}"/>
+    <javac2 destdir="${ustaxes.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.ustaxes}/javac">
+      <compilerarg line="${compiler.args.ustaxes}"/>
+      <bootclasspath refid="ustaxes.module.bootclasspath"/>
+      <classpath refid="ustaxes.module.production.classpath"/>
+      <src refid="ustaxes.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.ustaxes"/>
+    </javac2>
+    
+    <copy todir="${ustaxes.output.dir}">
+      <fileset dir="${module.ustaxes.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.ustaxes.tests" depends="register.custom.compilers,compile.module.ustaxes.production" description="compile module USTaxes; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.ustaxes" description="cleanup module">
+    <delete dir="${ustaxes.output.dir}"/>
+    <delete dir="${ustaxes.testoutput.dir}"/>
+  </target>
+</project>
