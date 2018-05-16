@@ -158,7 +158,9 @@
     <!-- Perform any build initialization in this target -->
   </target>
   
+  <!--
   <target name="clean" depends="clean.module.ustaxes" description="cleanup all"/>
+  -->
   
   <target name="build.modules" depends="init, clean, compile.module.ustaxes" description="build all modules"/>
   
