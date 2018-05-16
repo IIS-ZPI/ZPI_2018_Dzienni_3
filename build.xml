@@ -40,7 +40,7 @@
     <echo message="Build done" />
   </target>
   
-  <target name="test" depends="build">
+  <target name="run" depends="build">
     <junit printsummary="on" haltonfailure="yes">
         <classpath>
           <path refid="classpath.test" />
