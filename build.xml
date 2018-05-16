@@ -23,6 +23,23 @@
     <path refid="classpath.base" />
   </path>
   
+  <target name="test" depends="run, clean" />
+  
+  <target name="compile">
+    <mkdir dir="${main.build.dir}"/>
+    <javac srcdir="${main.src.dir}" destdir="${main.build.dir}" includeantruntime="false">
+      <classpath refid="classpath.base"/>
+    </javac>
+  </target>
+  
+  <target name="build" depends="compile">
+    <mkdir dir="${test.build.dir}"/>
+    <javac srcdir="${test.src.dir}" destdir="${test.build.dir}" includeantruntime="false">
+        <classpath refid="classpath.test"/>
+    </javac>
+    <echo message="Build done" />
+  </target>
+  
   <target name="test" depends="build">
     <junit printsummary="on" haltonfailure="yes">
         <classpath>
@@ -36,6 +53,12 @@
     </junit>
   </target>
   
+  <target name="clean">
+    <delete>
+        <fileset dir="${basedir}" includes="**/*.class" />
+    </delete>
+    <echo message="clean done" />
+  </target>
   
   <!-- Compiler options -->
   
