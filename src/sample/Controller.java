@@ -51,16 +51,35 @@ public class Controller {
 
         //dodanie przykladowych danych
         productObservableList.add("SAMPLE PRODUCT");
+        /*
         addedProductsObservableList.add(new AddedProduct("test"));
+        addedProductsObservableList.add(new AddedProduct("test2"));
+        addedProductsObservableList.add(new AddedProduct("test3"));
+        addedProductsObservableList.add(new AddedProduct("test4"));
+        */
         statesObservableList.add(new State("SAMPLE STATE"));
 
-        addingButton.setOnAction(event -> {
+        addingButton.setOnAction(event ->
+        {
+            if(addedProductsObservableList.size() > 1)
+                addedProductsObservableList.remove(addedProductsObservableList.size()-1);
             addedProductsObservableList.add(new AddedProduct(priceField.getText()));
+            if(addedProductsObservableList.get(addedProductsObservableList.size()-1).getAssignmentStatus()==false)
+            {
+                addedProductsObservableList.remove(addedProductsObservableList.size()-1);
+            }
+            addedProductsObservableList.add(new AddedProduct(String.valueOf(calculateSum())));
         });
-
-
     }
 
-
+    private double calculateSum()
+    {
+        Double sum = 0.0d;
+        for (AddedProduct ap: addedProductsObservableList)
+        {
+            sum += ap.getValue();
+        }
+        return sum;
+    }
 
 }

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
@@ -73,13 +74,14 @@
                                     <children>
                                         <HBox prefHeight="28.0" prefWidth="465.0">
                                             <children>
-                                                <ChoiceBox fx:id="productChoice" prefWidth="150.0" />
+                                                <ChoiceBox fx:id="productChoiceBox" prefWidth="150.0" />
                                                 <TextField fx:id="priceField" />
+                                    <Button fx:id="addingButton" mnemonicParsing="false" prefHeight="25.0" prefWidth="170.0" text="Add" />
                                             </children>
                                         </HBox>
-                                        <TableView prefHeight="347.0" prefWidth="465.0">
+                                        <TableView fx:id="addedProductsTable" prefHeight="347.0" prefWidth="465.0">
                                             <columns>
-                                                <TableColumn prefWidth="447.0" text="Result" />
+                                                <TableColumn fx:id="addedProductsColumn" prefWidth="447.0" text="Result" />
                                             </columns>
                                         </TableView>
                                     </children>
