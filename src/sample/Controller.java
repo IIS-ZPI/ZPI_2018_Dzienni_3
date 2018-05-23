@@ -37,5 +37,8 @@ public class Controller {
         //dodanie przykladowych danych
         productObservableList.add("SAMPLE PRODUCT");
         statesObservableList.add(new State("SAMPLE STATE"));
+
+        DataDownloader dataDownloader = new DataDownloader();
+        dataDownloader.DownloadData();
     }
 }
