@@ -9,6 +9,8 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 
+import java.util.ArrayList;
+
 public class Controller {
 
     @FXML
@@ -26,6 +28,7 @@ public class Controller {
     //arraylisty troche inny bo javafx,
     private ObservableList<String> productObservableList = FXCollections.observableArrayList();
     private ObservableList<State> statesObservableList = FXCollections.observableArrayList();
+    private ArrayList<StateData> data = new ArrayList<>();
 
     public void initialize(){
         productChoice.setItems(productObservableList);
@@ -36,9 +39,12 @@ public class Controller {
 
         //dodanie przykladowych danych
         productObservableList.add("SAMPLE PRODUCT");
-        statesObservableList.add(new State("SAMPLE STATE"));
+        //statesObservableList.add(new State("SAMPLE STATE"));
 
         DataDownloader dataDownloader = new DataDownloader();
-        dataDownloader.DownloadData();
+        data = dataDownloader.DownloadData();
+
+        DataImporter dataImporter =new DataImporter();
+        dataImporter.importData(statesObservableList,data);
     }
 }
