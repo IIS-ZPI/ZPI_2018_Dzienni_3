@@ -70,6 +70,9 @@ public class Controller {
             }
             addedProductsObservableList.add(new AddedProduct(String.valueOf(calculateSum())));
         });
+        DataDownloader dataDownloader = new DataDownloader();
+        dataDownloader.DownloadData();
+
     }
 
     private double calculateSum()
