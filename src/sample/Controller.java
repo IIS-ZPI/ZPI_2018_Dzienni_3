@@ -9,6 +9,8 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 
+import java.util.ArrayList;
+
 public class Controller {
 
     @FXML
@@ -37,6 +39,7 @@ public class Controller {
     private ObservableList<String> productObservableList = FXCollections.observableArrayList();
     private ObservableList<AddedProduct> addedProductsObservableList = FXCollections.observableArrayList();
     private ObservableList<State> statesObservableList = FXCollections.observableArrayList();
+    private ArrayList<StateData> data = new ArrayList<>();
 
     public void initialize(){
         productChoiceBox.setItems(productObservableList);
@@ -50,13 +53,13 @@ public class Controller {
 
         //dodanie przykladowych danych
         productObservableList.add("SAMPLE PRODUCT");
+
         /*
         addedProductsObservableList.add(new AddedProduct("test"));
         addedProductsObservableList.add(new AddedProduct("test2"));
         addedProductsObservableList.add(new AddedProduct("test3"));
         addedProductsObservableList.add(new AddedProduct("test4"));
         */
-        statesObservableList.add(new State("SAMPLE STATE"));
 
         addingButton.setOnAction(event ->
         {
@@ -70,7 +73,11 @@ public class Controller {
             addedProductsObservableList.add(new AddedProduct(String.valueOf(calculateSum())));
         });
         DataDownloader dataDownloader = new DataDownloader();
-        dataDownloader.DownloadData();
+
+        data = dataDownloader.DownloadData();
+
+        DataImporter dataImporter =new DataImporter();
+        dataImporter.importData(statesObservableList,data);
 
     }
 

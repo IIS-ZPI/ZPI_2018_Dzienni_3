@@ -15,7 +15,8 @@ public class DataDownloader {
     ArrayList<StateData> data = new ArrayList<>();
     StateData tmp;
 
-    public boolean DownloadData (){
+    public ArrayList<StateData> DownloadData (){
+
         String content = null;
         URLConnection connection = null;
         try {
@@ -41,7 +42,10 @@ public class DataDownloader {
 
             //działa nie ruszać
             if(rowItems.size()>0) {
-                tmp = new StateData(rowItems.get(0).text());
+                if(rowItems.get(0).text().contains("]"))
+                    tmp = new StateData(rowItems.get(0).text().substring(0,rowItems.get(0).text().indexOf("[")-1));
+                else
+                    tmp = new StateData(rowItems.get(0).text());
                 tmp.setBaseTax(rowItems.get(1).text());
                 tmp.setLocalSurTax(rowItems.get(2).text());
             }
@@ -52,7 +56,7 @@ public class DataDownloader {
         System.out.println(data);
         System.out.println(data.size());
 
-        return true;
+        return data;
 
     }
 }
