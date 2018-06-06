@@ -5,6 +5,7 @@ import sun.security.ssl.Debug;
 
 public class AddedProduct {
     private final SimpleStringProperty addedProductName;
+    private final SimpleStringProperty testProductName;
     private double calculatedValue;
     private boolean isProperlyParsed = true;
 
@@ -20,6 +21,11 @@ public class AddedProduct {
             System.out.println("Wrong number format.");
             isProperlyParsed = false;
         }
+        this.testProductName = new SimpleStringProperty("140");
+    }
+
+    public String getTestProductName() {
+        return testProductName.get();
     }
 
     public String getAddedProductName() {

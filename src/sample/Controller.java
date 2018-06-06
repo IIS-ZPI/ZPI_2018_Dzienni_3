@@ -54,12 +54,6 @@ public class Controller {
         //dodanie przykladowych danych
         productObservableList.add("SAMPLE PRODUCT");
 
-        /*
-        addedProductsObservableList.add(new AddedProduct("test"));
-        addedProductsObservableList.add(new AddedProduct("test2"));
-        addedProductsObservableList.add(new AddedProduct("test3"));
-        addedProductsObservableList.add(new AddedProduct("test4"));
-        */
 
         addingButton.setOnAction(event ->
         {
