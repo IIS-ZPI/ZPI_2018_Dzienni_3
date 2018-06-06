@@ -73,12 +73,15 @@ public class Controller {
             }
             addedProductsObservableList.add(new AddedProduct(String.valueOf(calculateSum())));
         });
-        DataDownloader dataDownloader = new DataDownloader();
 
+        DataDownloader dataDownloader = new DataDownloader();
         data = dataDownloader.DownloadData();
+
+        System.out.println(data.get(0).getStateName() + " groce "+data.get(0).getTaxForProductType("Groceries"));
 
         DataImporter dataImporter =new DataImporter();
         dataImporter.importData(statesObservableList,data);
+
 
     }
 
