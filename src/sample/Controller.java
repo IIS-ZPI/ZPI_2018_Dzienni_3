@@ -33,7 +33,6 @@ public class Controller {
     private TableColumn addedProductsColumn;
 
 
-
     //arraylisty troche inny bo javafx,
     private ObservableList<String> productObservableList = FXCollections.observableArrayList();
     private ObservableList<AddedProduct> addedProductsObservableList = FXCollections.observableArrayList();
