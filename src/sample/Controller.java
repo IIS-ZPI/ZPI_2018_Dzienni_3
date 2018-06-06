@@ -80,6 +80,8 @@ public class Controller {
         DataImporter dataImporter =new DataImporter();
         dataImporter.importData(statesObservableList,data);
 
+        ProductDownloader product = new ProductDownloader("http://pkapust.kis.p.lodz.pl/ZPI/product_list.csv");
+        product.downloadProcutList();
     }
 
     private double calculateSum()
