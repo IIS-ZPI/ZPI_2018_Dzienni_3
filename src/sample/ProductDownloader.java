@@ -7,18 +7,17 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 public class ProductDownloader {
 
     private String url;
-    private ArrayList<ImportedProduct> importedProducts = new ArrayList<>();
+    private ArrayList<ImportedProductData> importedProductData = new ArrayList<>();
 
     public ProductDownloader(String url) {
         this.url = url;
     }
 
-    public void downloadProcutList(){
+    public void downloadProductList(){
         try {
             URL oracle = new URL(url);
             BufferedReader in = new BufferedReader(
@@ -26,8 +25,8 @@ public class ProductDownloader {
 
             String inputLine;
             while ((inputLine = in.readLine()) != null){
-                String[] splited = inputLine.split(",");
-                importedProducts.add(new ImportedProduct(splited[0], splited[1], splited[2]));
+                String[] split = inputLine.split(",");
+                importedProductData.add(new ImportedProductData(split[0], split[1], split[2]));
             }
             in.close();
 
@@ -39,5 +38,10 @@ public class ProductDownloader {
             e.printStackTrace();
         }
 
+    }
+
+    public ArrayList<ImportedProductData> getImportedProductData()
+    {
+        return importedProductData;
     }
 }

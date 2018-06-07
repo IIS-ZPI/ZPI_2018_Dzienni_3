@@ -1,21 +1,43 @@
 package sample;
 
-public class ImportedProduct {
-    private String productName;
-    private String productCategory;
-    private float productValue;
+import javafx.beans.property.SimpleFloatProperty;
+import javafx.beans.property.SimpleStringProperty;
 
-    public ImportedProduct(String productName, String productCategory, String productValue) {
-        this.productName = productName;
-        this.productCategory = productCategory;
+public class ImportedProduct
+{
 
-        this.productValue = Float.parseFloat(productValue);
+    private SimpleStringProperty productName;
+    private SimpleStringProperty productCategory;
+    private SimpleFloatProperty productValue;
+
+    ImportedProduct(String productName, String productCategory, float productValue)
+    {
+        this.productName = new SimpleStringProperty(productName);
+        this.productCategory = new SimpleStringProperty(productCategory);
+        this.productValue = new SimpleFloatProperty(productValue);
     }
 
-    @Override
-    public String toString(){
-        return productName + " " + productCategory + " " + productValue;
+    public String getProductName() {
+        return productName.get();
     }
 
-    
+    public SimpleStringProperty productNameProperty() {
+        return productName;
+    }
+
+    public String getProductCategory() {
+        return productCategory.get();
+    }
+
+    public SimpleStringProperty productCategoryProperty() {
+        return productCategory;
+    }
+
+    public float getProductValue() {
+        return productValue.get();
+    }
+
+    public SimpleFloatProperty productValueProperty() {
+        return productValue;
+    }
 }

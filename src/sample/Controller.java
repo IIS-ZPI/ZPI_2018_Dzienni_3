@@ -4,87 +4,115 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.control.Button;
+import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
-public class Controller {
-
-    @FXML
-    private ChoiceBox productChoiceBox;
-
-    @FXML
-    private TextField priceField;
+public class Controller
+{
 
     @FXML
-    private Button addingButton;
+    private ChoiceBox<String> categoryChoiceBox;
 
     @FXML
-    private TableView statesTable;
+    private ChoiceBox<String> productChoiceBox;
 
     @FXML
-    private TableColumn statesColumn;
+    private TextField priceInputBox;
 
     @FXML
-    private TableView addedProductsTable;
+    private Button addProductButton;
 
     @FXML
-    private TableColumn addedProductsColumn;
+    private Button clearTableButton;
+
+    @FXML
+    private TableView mainTableView;
+
+    @FXML
+    private TableColumn<State, String> stateTableColumn;
+
+    @FXML
+    private TableColumn<State, String> taxTableColumn;
+
+    // these two arraylists are neccessary for filling ObservableLists for buttons
+    private ArrayList<ImportedProductData> ipal = new ArrayList<>();
+    private ArrayList<StateData> sdal = new ArrayList<>();
 
 
-    //arraylisty troche inny bo javafx,
-    private ObservableList<String> productObservableList = FXCollections.observableArrayList();
-    private ObservableList<AddedProduct> addedProductsObservableList = FXCollections.observableArrayList();
+    private ObservableList<String> categoryChoiceOL = FXCollections.observableArrayList();
+    private ObservableList<String> productChoiceOL = FXCollections.observableArrayList();
+
+    private ObservableList<AddedProduct> addedProductObservableList = FXCollections.observableArrayList();
+    private ObservableList<ImportedProduct> importedProductDataObservableList = FXCollections.observableArrayList();
     private ObservableList<State> statesObservableList = FXCollections.observableArrayList();
-    private ArrayList<StateData> data = new ArrayList<>();
-
-    public void initialize(){
-        productChoiceBox.setItems(productObservableList);
-
-        //nazwa "stateName" jest powiązana z klasą State, tabele wymagaja innych typow niz String do rozpoznawania kolumn
-        statesColumn.setCellValueFactory(new PropertyValueFactory<>("stateName"));
-        statesTable.setItems(statesObservableList);
-
-        addedProductsColumn.setCellValueFactory(new PropertyValueFactory<>("addedProductName"));
-        addedProductsTable.setItems(addedProductsObservableList);
-
-        //dodanie przykladowych danych
-        productObservableList.add("SAMPLE PRODUCT");
 
 
-        addingButton.setOnAction(event ->
-        {
-            if(addedProductsObservableList.size() > 1)
-                addedProductsObservableList.remove(addedProductsObservableList.size()-1);
-            addedProductsObservableList.add(new AddedProduct(priceField.getText()));
-            if(addedProductsObservableList.get(addedProductsObservableList.size()-1).getAssignmentStatus()==false)
-            {
-                addedProductsObservableList.remove(addedProductsObservableList.size()-1);
-            }
-            addedProductsObservableList.add(new AddedProduct(String.valueOf(calculateSum())));
-        });
-        DataDownloader dataDownloader = new DataDownloader();
 
-        data = dataDownloader.DownloadData();
+    /*
+    state, podatek, wartość bez podatku, wartość z podatkiem, ile zarabiasz
+     */
 
-        DataImporter dataImporter =new DataImporter();
-        dataImporter.importData(statesObservableList,data);
-
-        ProductDownloader product = new ProductDownloader("http://pkapust.kis.p.lodz.pl/ZPI/product_list.csv");
-        product.downloadProcutList();
-    }
-
-    private double calculateSum()
+    public void initialize()
     {
-        Double sum = 0.0d;
-        for (AddedProduct ap: addedProductsObservableList)
+        // retrieve list of states and tax values
+        ProductDownloader product = new ProductDownloader("http://pkapust.kis.p.lodz.pl/ZPI/product_list.csv");
+        product.downloadProductList();
+        ipal = product.getImportedProductData();
+
+        DataDownloader dataDownloader = new DataDownloader();
+        DataImporter dataImporter = new DataImporter();
+        sdal = dataDownloader.DownloadData();
+        dataImporter.importData(statesObservableList, sdal);
+        dataImporter.importProductData(importedProductDataObservableList, ipal);
+
+        HashSet<String> buf = new HashSet();
+        for(ImportedProductData a : ipal)
         {
-            sum += ap.getValue();
+            buf.add(a.getProductCategory());
         }
-        return sum;
+
+        for(String a : buf)
+        {
+            categoryChoiceOL.add(a);
+        }
+
+        buf.clear();
+
+        for(ImportedProductData a : ipal)
+        {
+            buf.add(a.getProductName());
+        }
+
+        for(String a : buf)
+        {
+            productChoiceOL.add(a);
+        }
+
+        categoryChoiceBox.setItems(categoryChoiceOL);
+        productChoiceBox.setItems(productChoiceOL);
+
+        mainTableView.setItems(addedProductObservableList);
+
+
+        stateTableColumn.setCellValueFactory(new PropertyValueFactory<>("stateName"));
+        taxTableColumn.setCellValueFactory(new PropertyValueFactory<>("testProductName"));
+        mainTableView.getColumns().setAll(stateTableColumn, taxTableColumn);
+
+
+        addProductButton.setOnAction(event ->
+        {
+            addedProductObservableList.add(new AddedProduct("10"));
+        });
+
+
+
+
     }
+
+
+
 
 }

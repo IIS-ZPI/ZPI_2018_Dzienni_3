@@ -13,4 +13,12 @@ public class DataImporter {
         }
     }
 
+    public void importProductData(ObservableList<ImportedProduct> ipol, ArrayList<ImportedProductData> ipal)
+    {
+        for(int i = 0; i < ipal.size(); i++)
+        {
+            ipol.add(new ImportedProduct(ipal.get(i).getProductName(), ipal.get(i).getProductCategory(), ipal.get(i).getProductValue()));
+        }
+    }
+
 }
