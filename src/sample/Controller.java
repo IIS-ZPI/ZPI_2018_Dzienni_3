@@ -32,19 +32,19 @@ public class Controller
     private TableView mainTableView;
 
     @FXML
-    private TableColumn<State, String> stateTableColumn;
+    private TableColumn<MainTableContainer, String> stateTableColumn;
 
     @FXML
-    private TableColumn<State, String> taxTableColumn;
+    private TableColumn<MainTableContainer, Float> taxTableColumn;
 
     @FXML
-    private TableColumn valueTableColumn;
+    private TableColumn<MainTableContainer, Float> valueTableColumn;
 
     @FXML
-    private TableColumn sumTableColumn;
+    private TableColumn<MainTableContainer, Float> sumTableColumn;
 
     @FXML
-    private TableColumn differenceTableColumn;
+    private TableColumn<MainTableContainer, Float> differenceTableColumn;
 
     // these two arraylists are neccessary for filling ObservableLists for buttons
     private ArrayList<ImportedProductData> importedProductDataArrayList = new ArrayList<>();
@@ -52,8 +52,8 @@ public class Controller
 
     private ObservableList<String> categoryChoiceOL = FXCollections.observableArrayList();
     private ObservableList<String> productChoiceOL = FXCollections.observableArrayList();
+    private ObservableList<MainTableContainer> mainTableContainerObservableList = FXCollections.observableArrayList();
 
-    private ObservableList<AddedProduct> addedProductObservableList = FXCollections.observableArrayList();
     private ObservableList<ImportedProduct> importedProductDataObservableList = FXCollections.observableArrayList();
     private ObservableList<State> statesObservableList = FXCollections.observableArrayList();
 
@@ -65,6 +65,21 @@ public class Controller
 
     public void initialize()
     {
+        /*  GENERAL ALGORITHM:
+            We need one ObservableList for the main table
+            from which table columns will be able to get their data from.
+            Upon choosing a category, product, inputting a price and pressing the addProductButton,
+            the ObservableList must be filled with as many rows
+            as many states there are present in the stateDataArrayList.
+
+            importedProductDataArrayList and stateDataArrayList store raw data,
+            retrieved straight from the source (Wikipedia/.csv file).
+            Since there is no real need for state info to have their own ObservableList,
+            it will be safe to delete it,
+            as long as the new class holding the data for the main TableView will be implemented.
+         */
+
+
         // retrieve list of states and tax values
         ProductDownloader product = new ProductDownloader("http://pkapust.kis.p.lodz.pl/ZPI/product_list.csv");
         product.downloadProductList();
@@ -76,26 +91,30 @@ public class Controller
         dataImporter.importData(statesObservableList, stateDataArrayList);
         dataImporter.importProductData(importedProductDataObservableList, importedProductDataArrayList);
 
-        clearForObservableList();
+        clearObservableList();
 
         categoryChoiceBox.setItems(categoryChoiceOL);
         productChoiceBox.setItems(productChoiceOL);
 
-        mainTableView.setItems(addedProductObservableList);
+
+        mainTableView.setItems(mainTableContainerObservableList);
 
 
-        stateTableColumn.setCellValueFactory(new PropertyValueFactory<>("addedProductName"));
-        taxTableColumn.setCellValueFactory(new PropertyValueFactory<>("testProductName"));
-        mainTableView.getColumns().setAll(stateTableColumn, taxTableColumn, valueTableColumn);
+        stateTableColumn.setCellValueFactory(new PropertyValueFactory<>("stateName"));
+        taxTableColumn.setCellValueFactory(new PropertyValueFactory<>("tax"));
+        valueTableColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
+        sumTableColumn.setCellValueFactory(new PropertyValueFactory<>("priceAfterTaxing"));
+        differenceTableColumn.setCellValueFactory(new PropertyValueFactory<>("difference"));
 
+        mainTableView.getColumns().setAll(stateTableColumn, taxTableColumn, valueTableColumn, sumTableColumn, differenceTableColumn);
 
         addProductButton.setOnAction(event ->
         {
-            addedProductObservableList.add(new AddedProduct("10.0f"));
+            mainTableContainerObservableList.add(new MainTableContainer("Alabama", 0.04f, 12.0f));
         });
     }
 
-    private void clearForObservableList()
+    private void clearObservableList()
     {
         HashSet<String> buf = new HashSet<>();
         for(ImportedProductData a : importedProductDataArrayList)
