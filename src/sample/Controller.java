@@ -37,10 +37,18 @@ public class Controller
     @FXML
     private TableColumn<State, String> taxTableColumn;
 
-    // these two arraylists are neccessary for filling ObservableLists for buttons
-    private ArrayList<ImportedProductData> ipal = new ArrayList<>();
-    private ArrayList<StateData> sdal = new ArrayList<>();
+    @FXML
+    private TableColumn valueTableColumn;
 
+    @FXML
+    private TableColumn sumTableColumn;
+
+    @FXML
+    private TableColumn differenceTableColumn;
+
+    // these two arraylists are neccessary for filling ObservableLists for buttons
+    private ArrayList<ImportedProductData> importedProductDataArrayList = new ArrayList<>();
+    private ArrayList<StateData> stateDataArrayList = new ArrayList<>();
 
     private ObservableList<String> categoryChoiceOL = FXCollections.observableArrayList();
     private ObservableList<String> productChoiceOL = FXCollections.observableArrayList();
@@ -60,36 +68,15 @@ public class Controller
         // retrieve list of states and tax values
         ProductDownloader product = new ProductDownloader("http://pkapust.kis.p.lodz.pl/ZPI/product_list.csv");
         product.downloadProductList();
-        ipal = product.getImportedProductData();
+        importedProductDataArrayList = product.getImportedProductData();
 
         DataDownloader dataDownloader = new DataDownloader();
         DataImporter dataImporter = new DataImporter();
-        sdal = dataDownloader.DownloadData();
-        dataImporter.importData(statesObservableList, sdal);
-        dataImporter.importProductData(importedProductDataObservableList, ipal);
+        stateDataArrayList = dataDownloader.DownloadData();
+        dataImporter.importData(statesObservableList, stateDataArrayList);
+        dataImporter.importProductData(importedProductDataObservableList, importedProductDataArrayList);
 
-        HashSet<String> buf = new HashSet();
-        for(ImportedProductData a : ipal)
-        {
-            buf.add(a.getProductCategory());
-        }
-
-        for(String a : buf)
-        {
-            categoryChoiceOL.add(a);
-        }
-
-        buf.clear();
-
-        for(ImportedProductData a : ipal)
-        {
-            buf.add(a.getProductName());
-        }
-
-        for(String a : buf)
-        {
-            productChoiceOL.add(a);
-        }
+        clearForObservableList();
 
         categoryChoiceBox.setItems(categoryChoiceOL);
         productChoiceBox.setItems(productChoiceOL);
@@ -97,22 +84,35 @@ public class Controller
         mainTableView.setItems(addedProductObservableList);
 
 
-        stateTableColumn.setCellValueFactory(new PropertyValueFactory<>("stateName"));
+        stateTableColumn.setCellValueFactory(new PropertyValueFactory<>("addedProductName"));
         taxTableColumn.setCellValueFactory(new PropertyValueFactory<>("testProductName"));
-        mainTableView.getColumns().setAll(stateTableColumn, taxTableColumn);
+        mainTableView.getColumns().setAll(stateTableColumn, taxTableColumn, valueTableColumn);
 
 
         addProductButton.setOnAction(event ->
         {
-            addedProductObservableList.add(new AddedProduct("10"));
+            addedProductObservableList.add(new AddedProduct("10.0f"));
         });
-
-
-
-
     }
 
+    private void clearForObservableList()
+    {
+        HashSet<String> buf = new HashSet<>();
+        for(ImportedProductData a : importedProductDataArrayList)
+        {
+            buf.add(a.getProductCategory());
+        }
 
+        categoryChoiceOL.addAll(buf);
 
+        buf.clear();
+
+        for(ImportedProductData a : importedProductDataArrayList)
+        {
+            buf.add(a.getProductName());
+        }
+
+        productChoiceOL.addAll(buf);
+    }
 
 }

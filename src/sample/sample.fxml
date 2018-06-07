@@ -24,6 +24,9 @@
         <columns>
           <TableColumn fx:id="stateTableColumn" prefWidth="75.0" text="STATE" />
           <TableColumn fx:id="taxTableColumn" prefWidth="75.0" text="TAX" />
+            <TableColumn fx:id="valueTableColumn" prefWidth="75.0" text="PRODUCT V" />
+            <TableColumn fx:id="sumTableColumn" prefWidth="75.0" text="VAL + TAX" />
+            <TableColumn fx:id="differenceTableColumn" prefWidth="75.0" text="DIFF." />
         </columns>
       </TableView>
    </center>

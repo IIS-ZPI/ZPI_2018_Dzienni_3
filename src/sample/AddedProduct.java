@@ -11,7 +11,8 @@ public class AddedProduct {
 
     public AddedProduct(String addedProductName)
     {
-        this.addedProductName = new SimpleStringProperty(addedProductName);
+        this.addedProductName = new SimpleStringProperty("19");
+        /*
         try
         {
             this.calculatedValue = Double.parseDouble(addedProductName);
@@ -21,28 +22,23 @@ public class AddedProduct {
             System.out.println("Wrong number format.");
             isProperlyParsed = false;
         }
+        */
         this.testProductName = new SimpleStringProperty("140");
-    }
-
-    public String getTestProductName() {
-        return testProductName.get();
     }
 
     public String getAddedProductName() {
         return addedProductName.get();
     }
 
-    public void setStateName(String addedProductName) {
-        this.addedProductName.set(addedProductName);
+    public SimpleStringProperty addedProductNameProperty() {
+        return addedProductName;
     }
 
-    public boolean getAssignmentStatus()
-    {
-        return isProperlyParsed;
+    public String getTestProductName() {
+        return testProductName.get();
     }
 
-    public double getValue()
-    {
-        return calculatedValue;
+    public SimpleStringProperty testProductNameProperty() {
+        return testProductName;
     }
 }
