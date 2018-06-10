@@ -1,5 +1,6 @@
 package sample;
 
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.beans.property.SimpleStringProperty;
 
@@ -7,20 +8,30 @@ public class MainTableContainer
 {
 
     private final SimpleStringProperty stateName;
-    private final SimpleFloatProperty tax;
-    private final SimpleFloatProperty price;
-    private final SimpleFloatProperty priceAfterTaxing;
-    private final SimpleFloatProperty difference;
-
+    private final SimpleDoubleProperty tax;
+    private final SimpleDoubleProperty price;
+    private final SimpleDoubleProperty priceAfterTaxing;
+    private final SimpleDoubleProperty difference;
+    private boolean isProperlyParsed = true;
 
     public MainTableContainer(String stateName,
-                              float tax, float price)
+                              double tax, String price)
     {
+        Double parsedPrice = 0.0;
         this.stateName = new SimpleStringProperty(stateName);
-        this.tax = new SimpleFloatProperty(tax);
-        this.price = new SimpleFloatProperty(price);
-        this.priceAfterTaxing = new SimpleFloatProperty(price + price*tax);
-        this.difference = new SimpleFloatProperty((price + price*tax) - price);
+        this.tax = new SimpleDoubleProperty(tax);
+        try
+        {
+            parsedPrice = Double.parseDouble(price);
+        }
+        catch(NumberFormatException nfe)
+        {
+            System.out.println("Wrong number format.");
+            isProperlyParsed = false;
+        }
+        this.price = new SimpleDoubleProperty(parsedPrice);
+        this.priceAfterTaxing = new SimpleDoubleProperty(parsedPrice + parsedPrice*tax);
+        this.difference = new SimpleDoubleProperty((parsedPrice + parsedPrice * tax) - parsedPrice);
     }
 
     public String getStateName() {
@@ -31,35 +42,35 @@ public class MainTableContainer
         return stateName;
     }
 
-    public float getTax() {
+    public double getTax() {
         return tax.get();
     }
 
-    public SimpleFloatProperty taxProperty() {
+    public SimpleDoubleProperty taxProperty() {
         return tax;
     }
 
-    public float getPrice() {
+    public double getPrice() {
         return price.get();
     }
 
-    public SimpleFloatProperty priceProperty() {
+    public SimpleDoubleProperty priceProperty() {
         return price;
     }
 
-    public float getPriceAfterTaxing() {
+    public double getPriceAfterTaxing() {
         return priceAfterTaxing.get();
     }
 
-    public SimpleFloatProperty priceAfterTaxingProperty() {
+    public SimpleDoubleProperty priceAfterTaxingProperty() {
         return priceAfterTaxing;
     }
 
-    public float getDifference() {
+    public double getDifference() {
         return difference.get();
     }
 
-    public SimpleFloatProperty differenceProperty() {
+    public SimpleDoubleProperty differenceProperty() {
         return difference;
     }
 }

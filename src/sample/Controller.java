@@ -46,6 +46,8 @@ public class Controller
     @FXML
     private TableColumn<MainTableContainer, Float> differenceTableColumn;
 
+    boolean isInfoDisplayed = false;
+
     // these two arraylists are neccessary for filling ObservableLists for buttons
     private ArrayList<ImportedProductData> importedProductDataArrayList = new ArrayList<>();
     private ArrayList<StateData> stateDataArrayList = new ArrayList<>();
@@ -110,7 +112,20 @@ public class Controller
 
         addProductButton.setOnAction(event ->
         {
-            mainTableContainerObservableList.add(new MainTableContainer("Alabama", 0.04f, 12.0f));
+            if(isInfoDisplayed == false)
+            {
+                for(int i = 0; i < stateDataArrayList.size(); i++)
+                    mainTableContainerObservableList.add(new MainTableContainer(stateDataArrayList.get(i).getStateName(),
+                            stateDataArrayList.get(i).getBaseTaxConverted(), priceInputBox.getText()));
+                isInfoDisplayed = true;
+            }
+        });
+
+        clearTableButton.setOnAction(event ->
+        {
+            for(int i = 0; i < stateDataArrayList.size(); i++)
+                mainTableContainerObservableList.clear();
+            isInfoDisplayed = false;
         });
     }
 
