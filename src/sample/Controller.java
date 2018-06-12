@@ -92,6 +92,17 @@ public class Controller
         stateDataArrayList = dataDownloader.DownloadData();
         dataImporter.importData(statesObservableList, stateDataArrayList);
         dataImporter.importProductData(importedProductDataObservableList, importedProductDataArrayList);
+      
+       /*From DKaito ver.
+        DataDownloader dataDownloader = new DataDownloader();
+        data = dataDownloader.DownloadData();
+
+        System.out.println(data.get(0).getStateName() + " groce "+data.get(0).getTaxForProductType("Groceries"));
+
+        DataImporter dataImporter =new DataImporter();
+        dataImporter.importData(statesObservableList,data);
+      */
+      
 
         clearObservableList();
 
