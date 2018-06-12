@@ -41,9 +41,9 @@ public class DataDownloader {
             Elements rowItems = row.select("td");
 
             //działa nie ruszać
-            if (rowItems.size() > 0) {
-                if (rowItems.get(0).text().contains("]"))
-                    tmp = new StateData(rowItems.get(0).text().substring(0, rowItems.get(0).text().indexOf("[") - 1));
+            if(rowItems.size() > 0) {
+                if(rowItems.get(0).text().contains("]"))
+                    tmp = new StateData(rowItems.get(0).text().substring(0,rowItems.get(0).text().indexOf("[")));
                 else
                     tmp = new StateData(rowItems.get(0).text());
                 tmp.setBaseTax(rowItems.get(1).text());
@@ -65,8 +65,6 @@ public class DataDownloader {
         }
 
         data.remove(0);
-        //  System.out.println(data);
-        //  System.out.println(data.size());
 
         return data;
 
