@@ -1,5 +1,6 @@
 package sample;
 
+import com.sun.xml.internal.ws.wsdl.writer.document.Import;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -138,7 +139,22 @@ public class Controller
                 mainTableContainerObservableList.clear();
             isInfoDisplayed = false;
         });
+
+        productChoiceBox.setOnAction(event ->
+        {
+            ImportedProductData ip = new ImportedProductData();
+            for(ImportedProductData ip2 : importedProductDataArrayList)
+            {
+                if(ip2.getProductName().equals(productChoiceBox.getValue()))
+                    ip = ip2;
+            }
+            if(ip.getProductValue() != -50000)
+            priceInputBox.setText(Float.toString(ip.getProductValue()));
+
+        });
     }
+
+
 
     private void clearObservableList()
     {
