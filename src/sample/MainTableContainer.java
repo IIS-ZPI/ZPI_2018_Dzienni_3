@@ -1,37 +1,67 @@
 package sample;
 
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleFloatProperty;
 import javafx.beans.property.SimpleStringProperty;
 
 public class MainTableContainer
 {
-
+    private double margin;
     private final SimpleStringProperty stateName;
     private final SimpleDoubleProperty tax;
     private final SimpleDoubleProperty price;
-    private final SimpleDoubleProperty priceAfterTaxing;
-    private final SimpleDoubleProperty difference;
+    private final SimpleDoubleProperty minimumDesiredMargin;
+    private final SimpleDoubleProperty marginForProduct;
+    private final SimpleDoubleProperty priceBeforeTaxingSDP;
+    private final SimpleDoubleProperty endPrice;
+    private final SimpleDoubleProperty earnings;
     private boolean isProperlyParsed = true;
 
     public MainTableContainer(String stateName,
-                              double tax, String price)
+                              double tax, double basePrice, double margin,
+                              String price)
     {
-        Double parsedPrice = 0.0;
+        Double endPrice = 0.0;
         this.stateName = new SimpleStringProperty(stateName);
         this.tax = new SimpleDoubleProperty(tax);
         try
         {
-            parsedPrice = Double.parseDouble(price);
+            endPrice = Double.parseDouble(price);
         }
         catch(NumberFormatException nfe)
         {
             System.out.println("Wrong number format.");
             isProperlyParsed = false;
         }
-        this.price = new SimpleDoubleProperty(parsedPrice);
-        this.priceAfterTaxing = new SimpleDoubleProperty(parsedPrice + parsedPrice*tax);
-        this.difference = new SimpleDoubleProperty((parsedPrice + parsedPrice * tax) - parsedPrice);
+        /*
+        margin dictates how much I want to earn on each product
+        I need to calculate how much I will earn (or lose) for each product sold in each state
+         */
+
+        /*
+        kolejno:
+        cena w sklepie
+        cena przed nałożeniem podatku (cena bazowa + marża)
+        zakładana marża dla aktualnej ceny
+        minimalna marża dla aktualnego produktu (basePrice * margin)
+        zarobek (marża uzyskana - minimumDesiredMargin)
+         */
+
+        this.endPrice = new SimpleDoubleProperty(endPrice);
+        double priceWithMarginBeforeTaxing = endPrice - endPrice * tax;
+        double marginForCurrentEndPrice = priceWithMarginBeforeTaxing - basePrice;
+        double minimumDesiredMrg = basePrice * margin;
+
+        System.out.println("Full price: " + priceWithMarginBeforeTaxing + "\nMargin for this price: " + marginForCurrentEndPrice + "\n");
+
+        double earnings = priceWithMarginBeforeTaxing - (basePrice);
+
+
+        this.priceBeforeTaxingSDP = new SimpleDoubleProperty(priceWithMarginBeforeTaxing);
+        this.marginForProduct = new SimpleDoubleProperty(marginForCurrentEndPrice);
+        this.minimumDesiredMargin = new SimpleDoubleProperty(minimumDesiredMrg);
+        this.earnings = new SimpleDoubleProperty(earnings);
+        this.price = new SimpleDoubleProperty(basePrice);
+
     }
 
     public String getStateName() {
@@ -58,19 +88,53 @@ public class MainTableContainer
         return price;
     }
 
-    public double getPriceAfterTaxing() {
-        return priceAfterTaxing.get();
+    public double getPriceBeforeTaxingSDP() {
+        return priceBeforeTaxingSDP.get();
     }
 
-    public SimpleDoubleProperty priceAfterTaxingProperty() {
-        return priceAfterTaxing;
+    public SimpleDoubleProperty priceBeforeTaxingSDPProperty() {
+        return priceBeforeTaxingSDP;
     }
 
-    public double getDifference() {
-        return difference.get();
+    public double getEndPrice() {
+        return endPrice.get();
     }
 
-    public SimpleDoubleProperty differenceProperty() {
-        return difference;
+    public SimpleDoubleProperty endPriceProperty() {
+        return endPrice;
     }
+
+    public double getMarginForProduct() {
+        return marginForProduct.get();
+    }
+
+    public SimpleDoubleProperty marginForProductProperty() {
+        return marginForProduct;
+    }
+
+    public void setMarginForProduct(double marginForProduct) {
+        this.marginForProduct.set(marginForProduct);
+    }
+
+    public double getEarnings() {
+        return earnings.get();
+    }
+
+    public SimpleDoubleProperty earningsProperty() {
+        return earnings;
+    }
+
+    public double getMinimumDesiredMargin() {
+        return minimumDesiredMargin.get();
+    }
+
+    public SimpleDoubleProperty minimumDesiredMarginProperty() {
+        return minimumDesiredMargin;
+    }
+
+
+    public double getMargin() {
+        return margin;
+    }
+
 }

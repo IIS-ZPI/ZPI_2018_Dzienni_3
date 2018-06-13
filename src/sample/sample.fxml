@@ -24,9 +24,12 @@
         <columns>
           <TableColumn fx:id="stateTableColumn" prefWidth="75.0" text="STATE" />
           <TableColumn fx:id="taxTableColumn" prefWidth="75.0" text="TAX" />
-            <TableColumn fx:id="valueTableColumn" prefWidth="75.0" text="PRODUCT V" />
-            <TableColumn fx:id="sumTableColumn" prefWidth="75.0" text="VAL + TAX" />
-            <TableColumn fx:id="differenceTableColumn" prefWidth="75.0" text="DIFF." />
+            <TableColumn fx:id="basePriceColumn" prefWidth="75.0" text="BASE" />
+            <TableColumn fx:id="minimumDesiredMarginColumn" prefWidth="75.0" text="MIN MARG" />
+            <TableColumn fx:id="marginColumn" prefWidth="75.0" text="MARGIN" />
+            <TableColumn fx:id="priceBeforeTaxingColumn" prefWidth="75.0" text="BASE + MARGIN" />
+            <TableColumn fx:id="endResultTableColumn" prefWidth="75.0" text="END PRICE" />
+            <TableColumn fx:id="earningsColumn" prefWidth="75.0" text="EARNINGS" />
         </columns>
       </TableView>
    </center>

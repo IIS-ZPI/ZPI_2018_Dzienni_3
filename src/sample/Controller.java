@@ -36,18 +36,27 @@ public class Controller
     private TableColumn<MainTableContainer, String> stateTableColumn;
 
     @FXML
+    private TableColumn<MainTableContainer, String> earningsColumn;
+
+    @FXML
     private TableColumn<MainTableContainer, Float> taxTableColumn;
 
     @FXML
-    private TableColumn<MainTableContainer, Float> valueTableColumn;
+    private TableColumn<MainTableContainer, Float> minimumDesiredMarginColumn;
 
     @FXML
-    private TableColumn<MainTableContainer, Float> sumTableColumn;
+    private TableColumn<MainTableContainer, Float> basePriceColumn;
 
     @FXML
-    private TableColumn<MainTableContainer, Float> differenceTableColumn;
+    private TableColumn<MainTableContainer, Float> marginColumn;
 
-    boolean isInfoDisplayed = false;
+    @FXML
+    private TableColumn<MainTableContainer, Float> priceBeforeTaxingColumn;
+
+    @FXML
+    private TableColumn<MainTableContainer, Float> endResultTableColumn;
+
+    private boolean isInfoDisplayed = false;
 
     // these two arraylists are neccessary for filling ObservableLists for buttons
     private ArrayList<ImportedProductData> importedProductDataArrayList = new ArrayList<>();
@@ -61,7 +70,7 @@ public class Controller
     private ObservableList<State> statesObservableList = FXCollections.observableArrayList();
     private HashMap<String, String> importedProductDataCategoryList;
 
-
+    private double margin = 0.1;
 
     /*
     state, podatek, wartość bez podatku, wartość z podatkiem, ile zarabiasz
@@ -69,20 +78,6 @@ public class Controller
 
     public void initialize()
     {
-        /*  GENERAL ALGORITHM:
-            We need one ObservableList for the main table
-            from which table columns will be able to get their data from.
-            Upon choosing a category, product, inputting a price and pressing the addProductButton,
-            the ObservableList must be filled with as many rows
-            as many states there are present in the stateDataArrayList.
-
-            importedProductDataArrayList and stateDataArrayList store raw data,
-            retrieved straight from the source (Wikipedia/.csv file).
-            Since there is no real need for state info to have their own ObservableList,
-            it will be safe to delete it,
-            as long as the new class holding the data for the main TableView will be implemented.
-         */
-
 
         // retrieve list of states and tax values
         ProductDownloader product = new ProductDownloader("http://pkapust.kis.p.lodz.pl/ZPI/product_list.csv");
@@ -95,16 +90,6 @@ public class Controller
         stateDataArrayList = dataDownloader.DownloadData();
         dataImporter.importData(statesObservableList, stateDataArrayList);
         dataImporter.importProductData(importedProductDataObservableList, importedProductDataArrayList);
-      
-       /*From DKaito ver.
-        DataDownloader dataDownloader = new DataDownloader();
-        data = dataDownloader.DownloadData();
-
-        System.out.println(data.get(0).getStateName() + " groce "+data.get(0).getTaxForProductType("Groceries"));
-
-        DataImporter dataImporter =new DataImporter();
-        dataImporter.importData(statesObservableList,data);
-      */
 
         clearObservableList();
 
@@ -117,19 +102,33 @@ public class Controller
 
         stateTableColumn.setCellValueFactory(new PropertyValueFactory<>("stateName"));
         taxTableColumn.setCellValueFactory(new PropertyValueFactory<>("tax"));
-        valueTableColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
-        sumTableColumn.setCellValueFactory(new PropertyValueFactory<>("priceAfterTaxing"));
-        differenceTableColumn.setCellValueFactory(new PropertyValueFactory<>("difference"));
+        basePriceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
+        minimumDesiredMarginColumn.setCellValueFactory(new PropertyValueFactory<>("minimumDesiredMargin"));
+        marginColumn.setCellValueFactory(new PropertyValueFactory<>("marginForProduct"));
+        priceBeforeTaxingColumn.setCellValueFactory(new PropertyValueFactory<>("priceBeforeTaxingSDP"));
+        endResultTableColumn.setCellValueFactory(new PropertyValueFactory<>("endPrice"));
+        earningsColumn.setCellValueFactory(new PropertyValueFactory<>("earnings"));
 
-        mainTableView.getColumns().setAll(stateTableColumn, taxTableColumn, valueTableColumn, sumTableColumn, differenceTableColumn);
+        mainTableView.getColumns().setAll(stateTableColumn, taxTableColumn, basePriceColumn, minimumDesiredMarginColumn, marginColumn, priceBeforeTaxingColumn, endResultTableColumn, earningsColumn);
 
         addProductButton.setOnAction(event ->
         {
-            if(isInfoDisplayed == false)
+            if(!isInfoDisplayed)
             {
-                for(int i = 0; i < stateDataArrayList.size(); i++)
-                    mainTableContainerObservableList.add(new MainTableContainer(stateDataArrayList.get(i).getStateName(),
-                            stateDataArrayList.get(i).getBaseTaxConverted(), priceInputBox.getText()));
+                ImportedProductData ip = new ImportedProductData();
+                for(ImportedProductData ip2 : importedProductDataArrayList)
+                {
+                    if(ip2.getProductName().equals(productChoiceBox.getValue()))
+                        ip = ip2;
+                }
+
+                for (StateData aStateDataArrayList : stateDataArrayList)
+                    mainTableContainerObservableList.add(new MainTableContainer(
+                            aStateDataArrayList.getStateName(),
+                            aStateDataArrayList.getBaseTaxConverted(),
+                            ip.getProductValue(),
+                            margin,
+                            priceInputBox.getText()));
                 isInfoDisplayed = true;
             }
         });
@@ -142,21 +141,17 @@ public class Controller
         });
 
 
-        categoryChoiceBox.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observableValue, Number number, Number number2) {
-                productChoiceOL.clear();
-                String category = categoryChoiceBox.getItems().get((Integer) number2);
-                HashSet<String> tmpSet = new HashSet<>();
-                Iterator it = importedProductDataCategoryList.entrySet().iterator();
-                while (it.hasNext()) {
-                    Map.Entry pair = (Map.Entry) it.next();
-                    if (pair.getValue().equals(category))
-                        tmpSet.add(pair.getKey().toString());
-                }
-                productChoiceOL.addAll(tmpSet);
+        categoryChoiceBox.getSelectionModel().selectedIndexProperty().addListener((observableValue, number, number2) -> {
+            productChoiceOL.clear();
+            String category = categoryChoiceBox.getItems().get((Integer) number2);
+            HashSet<String> tmpSet = new HashSet<>();
+            for (Object o : importedProductDataCategoryList.entrySet()) {
+                Map.Entry pair = (Map.Entry) o;
+                if (pair.getValue().equals(category))
+                    tmpSet.add(pair.getKey().toString());
             }
-            });
+            productChoiceOL.addAll(tmpSet);
+        });
 
 
         productChoiceBox.setOnAction(event ->

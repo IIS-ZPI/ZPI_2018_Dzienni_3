@@ -1,7 +1,6 @@
 package sample;
 
 import javafx.beans.property.SimpleStringProperty;
-import sun.security.ssl.Debug;
 
 public class AddedProduct {
     private final SimpleStringProperty addedProductName;
