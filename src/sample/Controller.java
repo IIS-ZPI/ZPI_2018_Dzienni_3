@@ -141,6 +141,7 @@ public class Controller
             isInfoDisplayed = false;
         });
 
+
         categoryChoiceBox.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observableValue, Number number, Number number2) {
@@ -155,8 +156,22 @@ public class Controller
                 }
                 productChoiceOL.addAll(tmpSet);
             }
+
+        productChoiceBox.setOnAction(event ->
+        {
+            ImportedProductData ip = new ImportedProductData();
+            for(ImportedProductData ip2 : importedProductDataArrayList)
+            {
+                if(ip2.getProductName().equals(productChoiceBox.getValue()))
+                    ip = ip2;
+            }
+            if(ip.getProductValue() != -50000)
+            priceInputBox.setText(Float.toString(ip.getProductValue()));
+
         });
     }
+
+
 
     private void clearObservableList()
     {

@@ -24,6 +24,11 @@ public class ImportedProductData {
         this.productValue = Float.parseFloat(productValue);
     }
 
+    public ImportedProductData()
+    {
+        this.productValue = -50000;
+    }
+
     @Override
     public String toString(){
         return productName + " " + productCategory + " " + productValue;
