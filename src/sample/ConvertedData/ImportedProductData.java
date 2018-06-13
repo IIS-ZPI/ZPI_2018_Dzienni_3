@@ -1,6 +1,29 @@
-package sample;
+package sample.ConvertedData;
 
-public class ImportedProductData {
+public class ImportedProductData
+{
+    private String productName;
+    private String productCategory;
+    private float productValue;
+
+    public ImportedProductData(String productName, String productCategory, String productValue)
+    {
+        this.productName = productName;
+        this.productCategory = productCategory;
+        this.productValue = Float.parseFloat(productValue);
+    }
+
+    // this constructor is merely for validity-checking purposes
+    public ImportedProductData()
+    {
+        this.productValue = -50000;
+    }
+
+    @Override
+    public String toString(){
+        return productName + " " + productCategory + " " + productValue;
+    }
+
     public String getProductName() {
         return productName;
     }
@@ -13,26 +36,5 @@ public class ImportedProductData {
         return productValue;
     }
 
-    private String productName;
-    private String productCategory;
-    private float productValue;
 
-    public ImportedProductData(String productName, String productCategory, String productValue) {
-        this.productName = productName;
-        this.productCategory = productCategory;
-
-        this.productValue = Float.parseFloat(productValue);
-    }
-
-    public ImportedProductData()
-    {
-        this.productValue = -50000;
-    }
-
-    @Override
-    public String toString(){
-        return productName + " " + productCategory + " " + productValue;
-    }
-
-    
 }

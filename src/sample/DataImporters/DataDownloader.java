@@ -1,9 +1,10 @@
-package sample;
+package sample.DataImporters;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import sample.ConvertedData.StateData;
 
 import java.net.URL;
 import java.net.URLConnection;

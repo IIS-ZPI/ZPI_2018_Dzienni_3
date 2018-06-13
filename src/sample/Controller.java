@@ -1,13 +1,19 @@
 package sample;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.cell.PropertyValueFactory;
+import sample.ConvertedData.ImportedProductData;
+import sample.ConvertedData.MainTableDataContainer;
+import sample.ConvertedData.StateData;
+import sample.DataImporters.DataDownloader;
+import sample.DataImporters.DataImporter;
+import sample.DataImporters.ProductDownloader;
+import sample.RetrievedData.ImportedProduct;
+import sample.RetrievedData.State;
 
 import java.util.*;
 
@@ -33,48 +39,43 @@ public class Controller
     private TableView mainTableView;
 
     @FXML
-    private TableColumn<MainTableContainer, String> stateTableColumn;
+    private TableColumn<MainTableDataContainer, String> stateTableColumn;
 
     @FXML
-    private TableColumn<MainTableContainer, String> earningsColumn;
+    private TableColumn<MainTableDataContainer, String> earningsColumn;
 
     @FXML
-    private TableColumn<MainTableContainer, Float> taxTableColumn;
+    private TableColumn<MainTableDataContainer, Float> taxTableColumn;
 
     @FXML
-    private TableColumn<MainTableContainer, Float> minimumDesiredMarginColumn;
+    private TableColumn<MainTableDataContainer, Float> minimumDesiredMarginColumn;
 
     @FXML
-    private TableColumn<MainTableContainer, Float> basePriceColumn;
+    private TableColumn<MainTableDataContainer, Float> basePriceColumn;
 
     @FXML
-    private TableColumn<MainTableContainer, Float> marginColumn;
+    private TableColumn<MainTableDataContainer, Float> marginColumn;
 
     @FXML
-    private TableColumn<MainTableContainer, Float> priceBeforeTaxingColumn;
+    private TableColumn<MainTableDataContainer, Float> priceBeforeTaxingColumn;
 
     @FXML
-    private TableColumn<MainTableContainer, Float> endResultTableColumn;
+    private TableColumn<MainTableDataContainer, Float> endResultTableColumn;
 
     private boolean isInfoDisplayed = false;
 
-    // these two arraylists are neccessary for filling ObservableLists for buttons
     private ArrayList<ImportedProductData> importedProductDataArrayList = new ArrayList<>();
     private ArrayList<StateData> stateDataArrayList = new ArrayList<>();
 
     private ObservableList<String> categoryChoiceOL = FXCollections.observableArrayList();
     private ObservableList<String> productChoiceOL = FXCollections.observableArrayList();
-    private ObservableList<MainTableContainer> mainTableContainerObservableList = FXCollections.observableArrayList();
+    private ObservableList<MainTableDataContainer> mainTableDataContainerObservableList = FXCollections.observableArrayList();
 
     private ObservableList<ImportedProduct> importedProductDataObservableList = FXCollections.observableArrayList();
     private ObservableList<State> statesObservableList = FXCollections.observableArrayList();
     private HashMap<String, String> importedProductDataCategoryList;
 
     private double margin = 0.1;
-
-    /*
-    state, podatek, wartość bez podatku, wartość z podatkiem, ile zarabiasz
-     */
 
     public void initialize()
     {
@@ -97,7 +98,7 @@ public class Controller
         productChoiceBox.setItems(productChoiceOL);
 
 
-        mainTableView.setItems(mainTableContainerObservableList);
+        mainTableView.setItems(mainTableDataContainerObservableList);
 
 
         stateTableColumn.setCellValueFactory(new PropertyValueFactory<>("stateName"));
@@ -123,7 +124,7 @@ public class Controller
                 }
 
                 for (StateData aStateDataArrayList : stateDataArrayList)
-                    mainTableContainerObservableList.add(new MainTableContainer(
+                    mainTableDataContainerObservableList.add(new MainTableDataContainer(
                             aStateDataArrayList.getStateName(),
                             aStateDataArrayList.getBaseTaxConverted(),
                             ip.getProductValue(),
@@ -136,7 +137,7 @@ public class Controller
         clearTableButton.setOnAction(event ->
         {
             for(int i = 0; i < stateDataArrayList.size(); i++)
-                mainTableContainerObservableList.clear();
+                mainTableDataContainerObservableList.clear();
             isInfoDisplayed = false;
         });
 

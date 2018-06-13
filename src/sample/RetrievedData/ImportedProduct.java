@@ -1,4 +1,4 @@
-package sample;
+package sample.RetrievedData;
 
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -10,7 +10,7 @@ public class ImportedProduct
     private SimpleStringProperty productCategory;
     private SimpleFloatProperty productValue;
 
-    ImportedProduct(String productName, String productCategory, float productValue)
+    public ImportedProduct(String productName, String productCategory, float productValue)
     {
         this.productName = new SimpleStringProperty(productName);
         this.productCategory = new SimpleStringProperty(productCategory);

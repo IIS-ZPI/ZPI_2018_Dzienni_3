@@ -1,4 +1,6 @@
-package sample;
+package sample.DataImporters;
+
+import sample.ConvertedData.ImportedProductData;
 
 import java.io.BufferedReader;
 import java.io.IOException;

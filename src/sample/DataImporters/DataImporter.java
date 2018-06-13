@@ -1,6 +1,10 @@
-package sample;
+package sample.DataImporters;
 
 import javafx.collections.ObservableList;
+import sample.RetrievedData.ImportedProduct;
+import sample.ConvertedData.ImportedProductData;
+import sample.RetrievedData.State;
+import sample.ConvertedData.StateData;
 
 import java.util.ArrayList;
 
