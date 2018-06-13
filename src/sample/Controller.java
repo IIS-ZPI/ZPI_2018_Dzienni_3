@@ -150,12 +150,14 @@ public class Controller
                 HashSet<String> tmpSet = new HashSet<>();
                 Iterator it = importedProductDataCategoryList.entrySet().iterator();
                 while (it.hasNext()) {
-                    Map.Entry pair = (Map.Entry)it.next();
-                    if(pair.getValue().equals(category))
+                    Map.Entry pair = (Map.Entry) it.next();
+                    if (pair.getValue().equals(category))
                         tmpSet.add(pair.getKey().toString());
                 }
                 productChoiceOL.addAll(tmpSet);
             }
+            });
+
 
         productChoiceBox.setOnAction(event ->
         {
