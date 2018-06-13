@@ -1,6 +1,7 @@
 package sample;
 
-import com.sun.xml.internal.ws.wsdl.writer.document.Import;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -8,8 +9,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.cell.PropertyValueFactory;
 
-import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.*;
 
 public class Controller
 {
@@ -59,6 +59,7 @@ public class Controller
 
     private ObservableList<ImportedProduct> importedProductDataObservableList = FXCollections.observableArrayList();
     private ObservableList<State> statesObservableList = FXCollections.observableArrayList();
+    private HashMap<String, String> importedProductDataCategoryList;
 
 
 
@@ -87,6 +88,7 @@ public class Controller
         ProductDownloader product = new ProductDownloader("http://pkapust.kis.p.lodz.pl/ZPI/product_list.csv");
         product.downloadProductList();
         importedProductDataArrayList = product.getImportedProductData();
+        importedProductDataCategoryList = product.getProductWithCategory();
 
         DataDownloader dataDownloader = new DataDownloader();
         DataImporter dataImporter = new DataImporter();
@@ -103,7 +105,6 @@ public class Controller
         DataImporter dataImporter =new DataImporter();
         dataImporter.importData(statesObservableList,data);
       */
-      
 
         clearObservableList();
 
@@ -139,6 +140,22 @@ public class Controller
                 mainTableContainerObservableList.clear();
             isInfoDisplayed = false;
         });
+
+
+        categoryChoiceBox.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observableValue, Number number, Number number2) {
+                productChoiceOL.clear();
+                String category = categoryChoiceBox.getItems().get((Integer) number2);
+                HashSet<String> tmpSet = new HashSet<>();
+                Iterator it = importedProductDataCategoryList.entrySet().iterator();
+                while (it.hasNext()) {
+                    Map.Entry pair = (Map.Entry)it.next();
+                    if(pair.getValue().equals(category))
+                        tmpSet.add(pair.getKey().toString());
+                }
+                productChoiceOL.addAll(tmpSet);
+            }
 
         productChoiceBox.setOnAction(event ->
         {

@@ -7,11 +7,13 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class ProductDownloader {
 
     private String url;
     private ArrayList<ImportedProductData> importedProductData = new ArrayList<>();
+    private HashMap<String, String> productWithCategory = new HashMap<>();
 
     public ProductDownloader(String url) {
         this.url = url;
@@ -27,6 +29,7 @@ public class ProductDownloader {
             while ((inputLine = in.readLine()) != null){
                 String[] split = inputLine.split(",");
                 importedProductData.add(new ImportedProductData(split[0], split[1], split[2]));
+                productWithCategory.put(split[0], split[1]);
             }
             in.close();
 
@@ -43,5 +46,9 @@ public class ProductDownloader {
     public ArrayList<ImportedProductData> getImportedProductData()
     {
         return importedProductData;
+    }
+
+    public HashMap<String, String> getProductWithCategory() {
+        return productWithCategory;
     }
 }
