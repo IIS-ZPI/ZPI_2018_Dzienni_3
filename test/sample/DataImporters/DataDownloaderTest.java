@@ -25,7 +25,7 @@ public class DataDownloaderTest {
         assertNotNull(dataDownloader.DownloadData());
     }
 
-    @Test
+   /* @Test
     public void checkExtractForNullValue() {
         assertEquals("", dataDownloader.extractTax(null));
     }
@@ -34,4 +34,5 @@ public class DataDownloaderTest {
     public void checkExtractEmptyStringlValue() {
         assertEquals("", dataDownloader.extractTax(""));
     }
+    */
 }
