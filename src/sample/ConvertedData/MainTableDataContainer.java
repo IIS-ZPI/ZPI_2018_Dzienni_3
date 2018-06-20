@@ -12,7 +12,7 @@ public class MainTableDataContainer
     private final SimpleDoubleProperty marginForProduct;
     private final SimpleDoubleProperty priceBeforeTaxingSDP;
     private final SimpleDoubleProperty endPrice;
-    private final SimpleDoubleProperty earnings;
+    private final SimpleStringProperty earnings;
     private boolean isProperlyParsed = true;
 
     public MainTableDataContainer(String stateName,
@@ -41,7 +41,12 @@ public class MainTableDataContainer
         this.priceBeforeTaxingSDP = new SimpleDoubleProperty(priceWithMarginBeforeTaxing);
         this.marginForProduct = new SimpleDoubleProperty(marginForCurrentEndPrice);
         this.minimumDesiredMargin = new SimpleDoubleProperty(minimumDesiredMrg);
-        this.earnings = new SimpleDoubleProperty(earnings);
+        if(earnings < 0)
+            this.earnings = new SimpleStringProperty("Na minusie");
+        else if (earnings < minimumDesiredMrg)
+            this.earnings = new SimpleStringProperty("Niewystarczający zarobek (" + earnings + ")");
+        else
+            this.earnings = new SimpleStringProperty("Zarobek: " + earnings);
         this.price = new SimpleDoubleProperty(basePrice);
     }
 
@@ -97,11 +102,11 @@ public class MainTableDataContainer
         this.marginForProduct.set(marginForProduct);
     }
 
-    public double getEarnings() {
+    public String getEarnings() {
         return earnings.get();
     }
 
-    public SimpleDoubleProperty earningsProperty() {
+    public SimpleStringProperty earningsProperty() {
         return earnings;
     }
 
