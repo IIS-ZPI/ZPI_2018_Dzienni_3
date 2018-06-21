@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="zpi_2018_dzienni_3" default="all">
-  
+<project name="zpi_2018_dzienni_3" default="all" xmlns:fx="javafx:com.sun.javafx.tools.ant">
   
   <property file="build.properties"/>
   <!-- Uncomment the following property if no tests compilation is needed -->
@@ -9,7 +8,8 @@
   <property name="skip.tests" value="true"/>
   -->
   
-  <property name="main.build.dir" value="build/main" />  
+  <property name="main.build.dir" value="build/main" />
+  <property name="out.build.dir" value="build/out" />
   <property name="main.src.dir" value="src" />
   <property name="test.build.dir" value="build/test" />
   <property name="test.src.dir" value="test" />
@@ -52,7 +52,21 @@
         <batchtest>
             <fileset dir="${test.src.dir}" includes="**/*Test*.java" />
         </batchtest>
-    </junit>
+    </junit>    
+  </target>
+  
+  <target name="jar" description="Package into JAR" depends="compile">
+    <jar destfile="${out.build.dir}/TaxCalculator.jar"
+      basedir="${main.build.dir}"
+      compress="true">
+      <zipgroupfileset dir="lib" includes="**"/>
+      <zipfileset dir="./src/sample" includes="sample.fxml" fullpath="sample/sample.fxml"/>
+      <manifest>
+      	<attribute name="TaxCalculator" value="main"/>
+        <attribute name="Main-Class" value="sample.Main"/>
+      </manifest>
+    </jar>
+    <echo message="Jar done" />
   </target>
   
   <target name="clean">
