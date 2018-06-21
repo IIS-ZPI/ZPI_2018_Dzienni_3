@@ -14,7 +14,7 @@ public class ProductDownloaderTest {
     }
 
 
-    @Test(timeout = 100)
+    @Test(timeout = 5000)
     public void downloadTimeTest() {
         productDownloader.downloadProductList();
     }
