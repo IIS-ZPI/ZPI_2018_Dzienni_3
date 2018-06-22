@@ -37,7 +37,7 @@ public class MainTableDataContainer
 
 
         this.endPrice = new SimpleDoubleProperty(endPrice);
-        double priceWithMarginBeforeTaxing = endPrice - endPrice * tax;
+        double priceWithMarginBeforeTaxing = endPrice / (1 + tax);
         float marginForCurrentEndPrice = (float)(priceWithMarginBeforeTaxing - basePrice);
         double minimumDesiredMrg = basePrice * margin;
         double earnings = priceWithMarginBeforeTaxing - (basePrice);
