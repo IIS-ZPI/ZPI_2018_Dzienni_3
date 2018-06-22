@@ -1,6 +1,7 @@
 package sample.ConvertedData;
 
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleFloatProperty;
 import javafx.beans.property.SimpleStringProperty;
 
 public class MainTableDataContainer
@@ -9,7 +10,7 @@ public class MainTableDataContainer
     private final SimpleDoubleProperty tax;
     private final SimpleDoubleProperty price;
     private final SimpleDoubleProperty minimumDesiredMargin;
-    private final SimpleDoubleProperty marginForProduct;
+    private final SimpleFloatProperty marginForProduct;
     private final SimpleDoubleProperty priceBeforeTaxingSDP;
     private final SimpleDoubleProperty endPrice;
     private final SimpleStringProperty earnings;
@@ -34,12 +35,12 @@ public class MainTableDataContainer
 
         this.endPrice = new SimpleDoubleProperty(endPrice);
         double priceWithMarginBeforeTaxing = endPrice - endPrice * tax;
-        double marginForCurrentEndPrice = priceWithMarginBeforeTaxing - basePrice;
+        float marginForCurrentEndPrice = (float)(priceWithMarginBeforeTaxing - basePrice);
         double minimumDesiredMrg = basePrice * margin;
         double earnings = priceWithMarginBeforeTaxing - (basePrice);
 
         this.priceBeforeTaxingSDP = new SimpleDoubleProperty(priceWithMarginBeforeTaxing);
-        this.marginForProduct = new SimpleDoubleProperty(marginForCurrentEndPrice);
+        this.marginForProduct = new SimpleFloatProperty(marginForCurrentEndPrice);
         this.minimumDesiredMargin = new SimpleDoubleProperty(minimumDesiredMrg);
         if(earnings < 0)
             this.earnings = new SimpleStringProperty("Na minusie");
@@ -94,11 +95,11 @@ public class MainTableDataContainer
         return marginForProduct.get();
     }
 
-    public SimpleDoubleProperty marginForProductProperty() {
+    public SimpleFloatProperty marginForProductProperty() {
         return marginForProduct;
     }
 
-    public void setMarginForProduct(double marginForProduct) {
+    public void setMarginForProduct(float marginForProduct) {
         this.marginForProduct.set(marginForProduct);
     }
 
