@@ -3,9 +3,12 @@ package sample;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.paint.Color;
+import javafx.util.Callback;
 import sample.ConvertedData.ImportedProductData;
 import sample.ConvertedData.MainTableDataContainer;
 import sample.ConvertedData.StateData;
@@ -106,9 +109,37 @@ public class Controller
         basePriceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
         minimumDesiredMarginColumn.setCellValueFactory(new PropertyValueFactory<>("minimumDesiredMargin"));
         marginColumn.setCellValueFactory(new PropertyValueFactory<>("marginForProduct"));
+        marginColumn.setCellFactory(new Callback<TableColumn<MainTableDataContainer, Float>, TableCell<MainTableDataContainer, Float>>() {
+            @Override
+            public TableCell<MainTableDataContainer, Float> call(TableColumn<MainTableDataContainer, Float> param) {
+                return new TableCell<MainTableDataContainer, Float>() {
+                    @Override
+                    public void updateItem(Float earnings, boolean empty)
+                    {
+                        super.updateItem(earnings, empty);
+                        setText(empty ? "" : getItem().toString());
+                        setGraphic(null);
+
+                        Float val = getItem();
+                        if(val == null)
+                            val = 0f;
+
+                        TableRow<MainTableDataContainer> currentRow = getTableRow();
+
+
+                        if (val < 0)
+                            currentRow.setStyle("-fx-background-color:lightcoral");
+                        else
+                            currentRow.setStyle("-fx-background-color:lightgreen");
+
+                    }
+                };
+            }
+        });
         priceBeforeTaxingColumn.setCellValueFactory(new PropertyValueFactory<>("priceBeforeTaxingSDP"));
         endResultTableColumn.setCellValueFactory(new PropertyValueFactory<>("endPrice"));
         earningsColumn.setCellValueFactory(new PropertyValueFactory<>("earnings"));
+
 
         mainTableView.getColumns().setAll(stateTableColumn, taxTableColumn, basePriceColumn, minimumDesiredMarginColumn, marginColumn, priceBeforeTaxingColumn, endResultTableColumn, earningsColumn);
 

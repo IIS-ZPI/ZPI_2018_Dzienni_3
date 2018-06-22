@@ -1,7 +1,10 @@
 package sample.ConvertedData;
 
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleFloatProperty;
 import javafx.beans.property.SimpleStringProperty;
+
+import java.text.DecimalFormat;
 
 public class MainTableDataContainer
 {
@@ -9,16 +12,17 @@ public class MainTableDataContainer
     private final SimpleDoubleProperty tax;
     private final SimpleDoubleProperty price;
     private final SimpleDoubleProperty minimumDesiredMargin;
-    private final SimpleDoubleProperty marginForProduct;
+    private final SimpleFloatProperty marginForProduct;
     private final SimpleDoubleProperty priceBeforeTaxingSDP;
     private final SimpleDoubleProperty endPrice;
-    private final SimpleDoubleProperty earnings;
+    private final SimpleStringProperty earnings;
     private boolean isProperlyParsed = true;
 
     public MainTableDataContainer(String stateName,
                                   double tax, double basePrice, double margin,
                                   String price)
     {
+        DecimalFormat df = new DecimalFormat("#,####");
         Double endPrice = 0.0;
         this.stateName = new SimpleStringProperty(stateName);
         this.tax = new SimpleDoubleProperty(tax);
@@ -32,16 +36,27 @@ public class MainTableDataContainer
             isProperlyParsed = false;
         }
 
+
+        endPrice = Double.parseDouble(df.format(endPrice));
+
         this.endPrice = new SimpleDoubleProperty(endPrice);
         double priceWithMarginBeforeTaxing = endPrice - endPrice * tax;
-        double marginForCurrentEndPrice = priceWithMarginBeforeTaxing - basePrice;
+        priceWithMarginBeforeTaxing = Double.parseDouble(df.format(priceWithMarginBeforeTaxing));
+        float marginForCurrentEndPrice = (float)(priceWithMarginBeforeTaxing - basePrice);
         double minimumDesiredMrg = basePrice * margin;
+        minimumDesiredMrg = Double.parseDouble(df.format(minimumDesiredMrg));
         double earnings = priceWithMarginBeforeTaxing - (basePrice);
+        earnings = Double.parseDouble(df.format(earnings));
 
         this.priceBeforeTaxingSDP = new SimpleDoubleProperty(priceWithMarginBeforeTaxing);
-        this.marginForProduct = new SimpleDoubleProperty(marginForCurrentEndPrice);
+        this.marginForProduct = new SimpleFloatProperty(marginForCurrentEndPrice);
         this.minimumDesiredMargin = new SimpleDoubleProperty(minimumDesiredMrg);
-        this.earnings = new SimpleDoubleProperty(earnings);
+        if(earnings < 0)
+            this.earnings = new SimpleStringProperty("Na minusie");
+        else if (earnings < minimumDesiredMrg)
+            this.earnings = new SimpleStringProperty("Niewystarczający zarobek (" + earnings + ")");
+        else
+            this.earnings = new SimpleStringProperty("Zarobek: " + earnings);
         this.price = new SimpleDoubleProperty(basePrice);
     }
 
@@ -89,19 +104,19 @@ public class MainTableDataContainer
         return marginForProduct.get();
     }
 
-    public SimpleDoubleProperty marginForProductProperty() {
+    public SimpleFloatProperty marginForProductProperty() {
         return marginForProduct;
     }
 
-    public void setMarginForProduct(double marginForProduct) {
+    public void setMarginForProduct(float marginForProduct) {
         this.marginForProduct.set(marginForProduct);
     }
 
-    public double getEarnings() {
+    public String getEarnings() {
         return earnings.get();
     }
 
-    public SimpleDoubleProperty earningsProperty() {
+    public SimpleStringProperty earningsProperty() {
         return earnings;
     }
 
