@@ -4,6 +4,8 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.beans.property.SimpleStringProperty;
 
+import java.text.DecimalFormat;
+
 public class MainTableDataContainer
 {
     private final SimpleStringProperty stateName;
@@ -20,6 +22,7 @@ public class MainTableDataContainer
                                   double tax, double basePrice, double margin,
                                   String price)
     {
+        DecimalFormat df = new DecimalFormat("#,####");
         Double endPrice = 0.0;
         this.stateName = new SimpleStringProperty(stateName);
         this.tax = new SimpleDoubleProperty(tax);
@@ -33,11 +36,17 @@ public class MainTableDataContainer
             isProperlyParsed = false;
         }
 
+
+        endPrice = Double.parseDouble(df.format(endPrice));
+
         this.endPrice = new SimpleDoubleProperty(endPrice);
         double priceWithMarginBeforeTaxing = endPrice - endPrice * tax;
+        priceWithMarginBeforeTaxing = Double.parseDouble(df.format(priceWithMarginBeforeTaxing));
         float marginForCurrentEndPrice = (float)(priceWithMarginBeforeTaxing - basePrice);
         double minimumDesiredMrg = basePrice * margin;
+        minimumDesiredMrg = Double.parseDouble(df.format(minimumDesiredMrg));
         double earnings = priceWithMarginBeforeTaxing - (basePrice);
+        earnings = Double.parseDouble(df.format(earnings));
 
         this.priceBeforeTaxingSDP = new SimpleDoubleProperty(priceWithMarginBeforeTaxing);
         this.marginForProduct = new SimpleFloatProperty(marginForCurrentEndPrice);
