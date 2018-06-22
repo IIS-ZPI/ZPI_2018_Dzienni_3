@@ -56,8 +56,8 @@ public class Controller
     @FXML
     private TableColumn<MainTableDataContainer, Float> basePriceColumn;
 
-    @FXML
-    private TableColumn<MainTableDataContainer, Float> marginColumn;
+    //@FXML
+    //private TableColumn<MainTableDataContainer, Float> marginColumn;
 
     @FXML
     private TableColumn<MainTableDataContainer, Float> priceBeforeTaxingColumn;
@@ -108,40 +108,38 @@ public class Controller
         taxTableColumn.setCellValueFactory(new PropertyValueFactory<>("tax"));
         basePriceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
         minimumDesiredMarginColumn.setCellValueFactory(new PropertyValueFactory<>("minimumDesiredMargin"));
-        marginColumn.setCellValueFactory(new PropertyValueFactory<>("marginForProduct"));
-        marginColumn.setCellFactory(new Callback<TableColumn<MainTableDataContainer, Float>, TableCell<MainTableDataContainer, Float>>() {
+        priceBeforeTaxingColumn.setCellValueFactory(new PropertyValueFactory<>("priceBeforeTaxingSDP"));
+        endResultTableColumn.setCellValueFactory(new PropertyValueFactory<>("endPrice"));
+        earningsColumn.setCellValueFactory(new PropertyValueFactory<>("earnings"));
+        earningsColumn.setCellFactory(new Callback<TableColumn<MainTableDataContainer, String>, TableCell<MainTableDataContainer, String>>() {
             @Override
-            public TableCell<MainTableDataContainer, Float> call(TableColumn<MainTableDataContainer, Float> param) {
-                return new TableCell<MainTableDataContainer, Float>() {
+            public TableCell<MainTableDataContainer, String> call(TableColumn<MainTableDataContainer, String> param) {
+                return new TableCell<MainTableDataContainer, String>() {
                     @Override
-                    public void updateItem(Float earnings, boolean empty)
-                    {
+                    public void updateItem(String earnings, boolean empty) {
                         super.updateItem(earnings, empty);
-                        setText(empty ? "" : getItem().toString());
+                        setText(empty ? "" : getItem());
                         setGraphic(null);
-
-                        Float val = getItem();
-                        if(val == null)
-                            val = 0f;
 
                         TableRow<MainTableDataContainer> currentRow = getTableRow();
 
 
-                        if (val < 0)
-                            currentRow.setStyle("-fx-background-color:lightcoral");
-                        else
-                            currentRow.setStyle("-fx-background-color:lightgreen");
-
+                        if((earnings != null && !earnings.isEmpty()))
+                        {
+                            if (earnings.contains("minusie"))
+                                currentRow.setStyle("-fx-background-color:lightcoral");
+                            else if (earnings.contains("Niewystar"))
+                                currentRow.setStyle("-fx-background-color:lightyellow");
+                            else
+                                currentRow.setStyle("-fx-background-color:lightgreen");
+                        }
                     }
                 };
             }
         });
-        priceBeforeTaxingColumn.setCellValueFactory(new PropertyValueFactory<>("priceBeforeTaxingSDP"));
-        endResultTableColumn.setCellValueFactory(new PropertyValueFactory<>("endPrice"));
-        earningsColumn.setCellValueFactory(new PropertyValueFactory<>("earnings"));
 
 
-        mainTableView.getColumns().setAll(stateTableColumn, taxTableColumn, basePriceColumn, minimumDesiredMarginColumn, marginColumn, priceBeforeTaxingColumn, endResultTableColumn, earningsColumn);
+        mainTableView.getColumns().setAll(stateTableColumn, taxTableColumn, basePriceColumn, minimumDesiredMarginColumn, priceBeforeTaxingColumn, endResultTableColumn, earningsColumn);
 
         addProductButton.setOnAction(event ->
         {

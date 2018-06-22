@@ -46,7 +46,7 @@ public class MainTableDataContainer
         this.marginForProduct = new SimpleFloatProperty(marginForCurrentEndPrice);
         this.minimumDesiredMargin = new SimpleDoubleProperty(minimumDesiredMrg);
         if(earnings < 0)
-            this.earnings = new SimpleStringProperty("Na minusie");
+            this.earnings = new SimpleStringProperty("Na minusie (" + earnings + ")");
         else if (earnings < minimumDesiredMrg)
             this.earnings = new SimpleStringProperty("Niewystarczający zarobek (" + earnings + ")");
         else
